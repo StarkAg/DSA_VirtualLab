@@ -1,14 +1,42 @@
-# DSA Virtual Lab
+<h1 align="center">🧪 DSA Virtual Lab</h1>
 
-A full-fledged **Data Structures & Algorithms Virtual Lab** — an interactive learning
-platform modeled on the SRMIST *eLab* experience. Each experiment combines **theory**,
-an **interactive visualization**, a **real code editor** (compile & run against test
-cases), and a **quiz**.
+<p align="center">
+  An interactive <b>Data Structures &amp; Algorithms</b> learning platform — theory,
+  animated visualizations, a real in-browser code editor, and quizzes.
+</p>
 
-Built with **React + Vite + TailwindCSS**. Uses the GradeX typographic design language
-(Space Grotesk / Inter / JetBrains Mono) recoloured to an academic light palette.
+<p align="center">
+  <a href="https://dsa-virtual-lab.vercel.app"><img alt="Live Demo" src="https://img.shields.io/badge/Live%20Demo-dsa--virtual--lab.vercel.app-2563eb?style=for-the-badge&logo=vercel&logoColor=white"></a>
+</p>
+
+<p align="center">
+  <img alt="React" src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black">
+  <img alt="Vite" src="https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white">
+  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind-3-38BDF8?logo=tailwindcss&logoColor=white">
+  <img alt="CodeMirror" src="https://img.shields.io/badge/CodeMirror-6-D30707?logo=codemirror&logoColor=white">
+  <img alt="Vercel" src="https://img.shields.io/badge/Deployed-Vercel-000?logo=vercel&logoColor=white">
+  <img alt="License" src="https://img.shields.io/badge/License-MIT-22c55e">
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/dashboard.png" alt="DSA Virtual Lab dashboard" width="100%">
+</p>
+
+A full-fledged virtual lab modeled on the SRMIST *eLab* experience. Each experiment
+combines **theory**, an **interactive visualization**, a **real code editor** (compile &
+run against test cases), and a **quiz**. Built with **React + Vite + TailwindCSS**, using
+the GradeX typographic design language (Space Grotesk / Inter / JetBrains Mono) recoloured
+to an academic light palette.
 
 🔗 **Live:** https://dsa-virtual-lab.vercel.app
+
+## Screenshots
+
+| Experiment — theory & live visualizer | Practice — real C/C++/Java/Python grading |
+|:--:|:--:|
+| ![Theory and visualization](docs/screenshots/experiment-theory.png) | ![Code editor with passing tests](docs/screenshots/practice.png) |
+| **Animated data-structure simulations** | **Quiz with instant scoring** |
+| ![Sorting animation](docs/screenshots/dashboard.png) | ![Quiz](docs/screenshots/quiz.png) |
 
 ## The 5 experiments
 1. **Stack (LIFO)** — push / pop / peek; balanced parentheses, reverse using a stack
