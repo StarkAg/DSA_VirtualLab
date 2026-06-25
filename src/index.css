@@ -1,0 +1,93 @@
+/* ===== Fonts (copied from GradeX design system) ===== */
+@font-face { font-family: 'Space Grotesk'; src: url('/fonts/space-grotesk/SpaceGrotesk-400.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Space Grotesk'; src: url('/fonts/space-grotesk/SpaceGrotesk-500.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Space Grotesk'; src: url('/fonts/space-grotesk/SpaceGrotesk-600.ttf') format('truetype'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Space Grotesk'; src: url('/fonts/space-grotesk/SpaceGrotesk-700.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url('/fonts/inter/Inter-400.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url('/fonts/inter/Inter-500.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url('/fonts/inter/Inter-600.ttf') format('truetype'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url('/fonts/inter/Inter-700.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('/fonts/jetbrains-mono/JetBrainsMono-400.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('/fonts/jetbrains-mono/JetBrainsMono-500.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('/fonts/jetbrains-mono/JetBrainsMono-700.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== Academic light theme tokens (GradeX-style token system) ===== */
+:root {
+  --app-bg: #eef1f5;
+  --surface: #ffffff;
+  --surface-sunken: #f4f6f8;
+  --line: rgba(15, 23, 42, 0.08);
+  --line-strong: rgba(15, 23, 42, 0.14);
+  --text-1: #0f172a;
+  --text-2: #475569;
+  --text-3: #94a3b8;
+  --accent: #2563eb;
+  --teal: #0d9488;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--app-bg);
+  color: var(--text-1);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, .font-display { font-family: 'Space Grotesk', sans-serif; }
+
+::selection { background: rgba(37, 99, 235, 0.2); }
+
+/* Thin academic scrollbars */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(15, 23, 42, 0.18); border-radius: 999px; border: 2px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background: rgba(15, 23, 42, 0.3); background-clip: content-box; }
+
+@layer components {
+  /* eLab-style gradient section header bar */
+  .section-bar {
+    @apply relative flex items-center gap-2 rounded-t-xl2 px-5 py-3 text-white bg-header-bar overflow-hidden;
+  }
+  .section-bar::after {
+    content: '';
+    @apply absolute inset-0 pointer-events-none;
+    background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0));
+  }
+  .section-bar h2, .section-bar h3 {
+    @apply text-sm font-semibold tracking-wide uppercase relative z-10;
+    letter-spacing: 0.06em;
+  }
+
+  .card {
+    @apply bg-surface border border-surface-line rounded-xl2 shadow-card;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-150 select-none;
+  }
+  .btn-primary {
+    @apply btn bg-accent text-white hover:bg-accent-dark active:scale-[0.98] shadow-pop;
+  }
+  .btn-ghost {
+    @apply btn text-ink-soft hover:bg-surface-sunken border border-surface-line;
+  }
+
+  .stat-label { @apply text-[11px] font-medium uppercase tracking-wide text-ink-faint; }
+}
+
+/* CodeMirror sizing */
+.cm-editor { height: 100%; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+.cm-editor .cm-scroller { font-family: 'JetBrains Mono', monospace; }

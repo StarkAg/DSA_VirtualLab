@@ -1,0 +1,58 @@
+# Self-hosted Judge0 CE (GPL-3.0, free, no limits).
+# Run on a Linux VM (NOT Vercel — Judge0 needs privileged containers).
+# Usage:
+#   1. Edit judge0.conf (set strong POSTGRES_PASSWORD and REDIS_PASSWORD).
+#   2. docker compose up -d db redis
+#   3. sleep 10
+#   4. docker compose up -d
+# Judge0 API is then available on http://<this-vm-ip>:2358
+x-logging: &default-logging
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "5"
+
+services:
+  server:
+    image: judge0/judge0:1.13.1
+    volumes:
+      - ./judge0.conf:/judge0.conf:ro
+    ports:
+      - "2358:2358"
+    privileged: true
+    <<: *default-logging
+    restart: always
+
+  workers:
+    image: judge0/judge0:1.13.1
+    command: ["./scripts/workers"]
+    volumes:
+      - ./judge0.conf:/judge0.conf:ro
+    privileged: true
+    <<: *default-logging
+    restart: always
+
+  db:
+    image: postgres:16.2
+    env_file: judge0.conf
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/
+    <<: *default-logging
+    restart: always
+
+  redis:
+    image: redis:7.2.4
+    command: [
+      "bash", "-c",
+      'docker-entrypoint.sh --appendonly no --requirepass "$$REDIS_PASSWORD"'
+    ]
+    env_file: judge0.conf
+    volumes:
+      - redis-data:/data
+    <<: *default-logging
+    restart: always
+
+volumes:
+  postgres-data:
+  redis-data:
