@@ -56,6 +56,12 @@ export default function Experiment() {
   const expIndex = experiments.findIndex((e) => e.id === id);
   const nextExp = experiments[(expIndex + 1) % experiments.length];
 
+  // step navigation across the 4 tabs
+  const curIdx = TABS.findIndex((t) => t.id === tab);
+  const prevTab = TABS[curIdx - 1];
+  const nextTab = TABS[curIdx + 1];
+  const goTab = (tabId) => { setTab(tabId); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+
   return (
     <div className="mx-auto max-w-6xl space-y-4">
       {/* breadcrumb / nav */}
@@ -131,6 +137,37 @@ export default function Experiment() {
             </div>
           )}
           {tab === 'quiz' && <Quiz exp={exp} />}
+        </div>
+
+        {/* step navigation — keeps students moving forward through the tabs */}
+        <style>{`@keyframes nudgeX { 0%,100%{transform:translateX(0)} 50%{transform:translateX(4px)} }`}</style>
+        <div className="flex items-center justify-between gap-3 border-t border-surface-line bg-surface-sunken/40 px-4 py-3">
+          {prevTab ? (
+            <button
+              onClick={() => goTab(prevTab.id)}
+              className="flex items-center gap-1.5 rounded-lg border border-surface-line bg-white px-3 py-2 text-sm font-medium text-ink-mute transition hover:bg-surface-sunken"
+            >
+              <ChevronLeft size={15} /> {prevTab.label}
+            </button>
+          ) : <span />}
+
+          {nextTab ? (
+            <button
+              onClick={() => goTab(nextTab.id)}
+              className="btn-primary flex items-center gap-2 px-4 py-2 text-sm shadow-pop ring-2 ring-accent/20"
+            >
+              Next: {nextTab.label}
+              <ChevronRight size={16} style={{ animation: 'nudgeX 1.1s ease-in-out infinite' }} />
+            </button>
+          ) : (
+            <button
+              onClick={() => { navigate(`/experiment/${nextExp.id}`); setTab('theory'); setChIdx(0); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              className="btn-primary flex items-center gap-2 px-4 py-2 text-sm shadow-pop ring-2 ring-accent/20"
+            >
+              Next experiment: {nextExp.title}
+              <ChevronRight size={16} style={{ animation: 'nudgeX 1.1s ease-in-out infinite' }} />
+            </button>
+          )}
         </div>
       </div>
 
