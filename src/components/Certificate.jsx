@@ -1,6 +1,15 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { X, Printer } from 'lucide-react';
 import { getProfile } from '../lib/identity.js';
+
+// Bundled celebration chime (Mixkit "achievement bell", free license).
+function playCelebration() {
+  try {
+    const audio = new Audio('/sounds/celebrate.mp3');
+    audio.volume = 0.55;
+    audio.play().catch(() => {}); // ignore autoplay-policy rejections
+  } catch { /* no audio — silent */ }
+}
 
 // ─── Creative confetti cannon ────────────────────────────────────────────────
 // Particles burst up-and-out from the top of the certificate, arc, then fall.
@@ -163,6 +172,9 @@ export default function Certificate({ exp, onClose }) {
   const name = profile.name || 'Student';
   const date = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
   const confetti = useConfetti(reduceMotion ? 0 : 54);
+
+  // play the celebration chime once when the certificate appears
+  useEffect(() => { playCelebration(); }, []);
 
   const handlePrint = () => {
     const win = window.open('', '_blank', 'width=1050,height=760');
