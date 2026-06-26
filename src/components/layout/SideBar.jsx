@@ -31,6 +31,7 @@ export default function SideBar() {
           </button>
         );
       })}
+      <span className="mt-auto pb-2 text-[8px] font-mono text-ink-faint/30 select-none rotate-90 tracking-widest">stark</span>
     </aside>
   );
 }

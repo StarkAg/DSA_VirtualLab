@@ -84,7 +84,7 @@ export default function Login() {
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Dhruv"
+            placeholder="Your full name"
             className="mt-1 w-full rounded-lg border border-surface-line bg-white px-3 py-2.5 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20"
           />
 
@@ -93,7 +93,7 @@ export default function Login() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="dhruv@srmist.edu.in"
+            placeholder="you@srmist.edu.in"
             className="mt-1 w-full rounded-lg border border-surface-line bg-white px-3 py-2.5 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20"
           />
 
