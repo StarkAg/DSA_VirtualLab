@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { BookOpen, FileText, Code2, HelpCircle, ChevronLeft, Home, ChevronRight, CheckCircle2 } from 'lucide-react';
 import SectionHeader from '../components/layout/SectionHeader.jsx';
@@ -7,6 +7,7 @@ import ChallengeInfo from '../components/experiment/ChallengeInfo.jsx';
 import TestCasePanel from '../components/experiment/TestCasePanel.jsx';
 import PracticePanel from '../components/experiment/PracticePanel.jsx';
 import Quiz from '../components/quiz/Quiz.jsx';
+import Certificate from '../components/Certificate.jsx';
 import { useQuery } from 'convex/react';
 import { api } from '@convex/api';
 import { getExperiment, experiments } from '../data/experiments.js';
@@ -26,11 +27,25 @@ export default function Experiment() {
   const [tab, setTab] = useState('theory');
   const [chIdx, setChIdx] = useState(0);
 
+  const [certOpen, setCertOpen] = useState(false);
+
   const profile = getProfile();
   const progress = useQuery(
     api.progress.forUser,
     profile?.userId ? { userId: profile.userId } : 'skip'
   );
+
+  // Auto-pop certificate the moment this session causes full completion
+  const solvedCount = (progress?.solved || []).filter(s => s.experimentId === id).length;
+  const pct = exp ? (exp.challenges.length ? Math.round((solvedCount / exp.challenges.length) * 100) : 0) : 0;
+  const prevPct = useRef(null);
+  useEffect(() => {
+    if (progress === undefined) return; // still loading
+    if (pct === 100 && prevPct.current !== null && prevPct.current < 100) {
+      setCertOpen(true);
+    }
+    prevPct.current = pct;
+  }, [pct, progress]);
 
   if (!exp) return <Navigate to="/dashboard" replace />;
   const challenge = exp.challenges[chIdx];
@@ -118,6 +133,8 @@ export default function Experiment() {
           {tab === 'quiz' && <Quiz exp={exp} />}
         </div>
       </div>
+
+      {certOpen && <Certificate exp={exp} onClose={() => setCertOpen(false)} />}
 
       <footer className="flex flex-wrap items-center justify-center gap-3 pb-4 text-xs text-ink-faint">
         <button onClick={() => navigate('/dashboard')} className="flex items-center gap-1 hover:text-accent">
