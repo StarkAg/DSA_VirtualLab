@@ -1,27 +1,20 @@
-import { useEffect, useState } from 'react';
 import { IdCard, User, CheckCircle2, GraduationCap } from 'lucide-react';
+import { useQuery } from 'convex/react';
+import { api } from '@convex/api';
 import SectionHeader from '../components/layout/SectionHeader.jsx';
 import StatCard from '../components/dashboard/StatCard.jsx';
 import RankWidget from '../components/dashboard/RankWidget.jsx';
 import ExperimentCard from '../components/dashboard/ExperimentCard.jsx';
 import { experiments } from '../data/experiments.js';
-import { getProfile, computeStats } from '../lib/progress.js';
+import { getProfile } from '../lib/identity.js';
+import { computeStats, EMPTY_PROGRESS } from '../lib/stats.js';
 
 export default function Dashboard() {
   const profile = getProfile();
-  const [stats, setStats] = useState(() => computeStats(experiments));
-
-  // refresh when progress changes (e.g. returning from an experiment)
-  useEffect(() => {
-    const refresh = () => setStats(computeStats(experiments));
-    refresh();
-    window.addEventListener('dsalab:progress', refresh);
-    window.addEventListener('focus', refresh);
-    return () => {
-      window.removeEventListener('dsalab:progress', refresh);
-      window.removeEventListener('focus', refresh);
-    };
-  }, []);
+  const progress =
+    useQuery(api.progress.forUser, profile?.userId ? { userId: profile.userId } : 'skip') ||
+    EMPTY_PROGRESS;
+  const stats = computeStats(experiments, progress);
 
   return (
     <div className="mx-auto max-w-6xl space-y-5">
@@ -58,7 +51,7 @@ export default function Dashboard() {
         <SectionHeader title="DSA Lab — Experiments" />
         <div className="grid gap-5 p-5 sm:grid-cols-2 xl:grid-cols-3">
           {experiments.map((exp) => (
-            <ExperimentCard key={exp.id} exp={exp} />
+            <ExperimentCard key={exp.id} exp={exp} progress={progress} />
           ))}
         </div>
       </section>

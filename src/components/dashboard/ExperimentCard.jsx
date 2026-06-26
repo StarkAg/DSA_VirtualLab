@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { CornerDownLeft, Award, Info, Layers, AlignHorizontalJustifyStart, Link2, BarChart3, Search, Box } from 'lucide-react';
-import { experimentCompletion } from '../../lib/progress.js';
+import { experimentCompletion } from '../../lib/stats.js';
 
 const ICONS = { Layers, AlignHorizontalJustifyStart, Link2, BarChart3, Search };
 
-export default function ExperimentCard({ exp }) {
+export default function ExperimentCard({ exp, progress }) {
   const navigate = useNavigate();
-  const { pct, solvedCount, quizBest } = experimentCompletion(exp);
+  const { pct, solvedCount, quizBest } = experimentCompletion(exp, progress);
   const Icon = ICONS[exp.icon] || Box;
   const total = exp.challenges.length;
 

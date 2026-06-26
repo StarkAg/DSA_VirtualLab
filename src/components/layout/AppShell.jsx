@@ -1,7 +1,7 @@
 import { Navigate, useNavigate } from 'react-router-dom';
 import TopBar from './TopBar.jsx';
 import SideBar from './SideBar.jsx';
-import { getProfile } from '../../lib/progress.js';
+import { getProfile } from '../../lib/identity.js';
 
 // Wraps authenticated pages with the eLab chrome; redirects to /login if no profile.
 export default function AppShell({ children }) {

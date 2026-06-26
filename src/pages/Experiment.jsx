@@ -7,8 +7,10 @@ import ChallengeInfo from '../components/experiment/ChallengeInfo.jsx';
 import TestCasePanel from '../components/experiment/TestCasePanel.jsx';
 import PracticePanel from '../components/experiment/PracticePanel.jsx';
 import Quiz from '../components/quiz/Quiz.jsx';
+import { useQuery } from 'convex/react';
+import { api } from '@convex/api';
 import { getExperiment, experiments } from '../data/experiments.js';
-import { getExperimentProgress } from '../lib/progress.js';
+import { getProfile } from '../lib/identity.js';
 
 const TABS = [
   { id: 'theory', label: 'Aim & Theory', icon: BookOpen },
@@ -24,9 +26,17 @@ export default function Experiment() {
   const [tab, setTab] = useState('theory');
   const [chIdx, setChIdx] = useState(0);
 
+  const profile = getProfile();
+  const progress = useQuery(
+    api.progress.forUser,
+    profile?.userId ? { userId: profile.userId } : 'skip'
+  );
+
   if (!exp) return <Navigate to="/dashboard" replace />;
   const challenge = exp.challenges[chIdx];
-  const solved = getExperimentProgress(exp.id).solved || {};
+  const solved = new Set(
+    (progress?.solved || []).filter((s) => s.experimentId === exp.id).map((s) => s.challengeId)
+  );
 
   const expIndex = experiments.findIndex((e) => e.id === id);
   const nextExp = experiments[(expIndex + 1) % experiments.length];
@@ -82,7 +92,7 @@ export default function Experiment() {
                     chIdx === i ? 'border-accent bg-accent/10 text-accent' : 'border-surface-line bg-white text-ink-mute hover:bg-surface-sunken'
                   }`}
                 >
-                  {solved[c.id] && <CheckCircle2 size={13} className="text-ok" />}
+                  {solved.has(c.id) && <CheckCircle2 size={13} className="text-ok" />}
                   {c.title}
                 </button>
               ))}

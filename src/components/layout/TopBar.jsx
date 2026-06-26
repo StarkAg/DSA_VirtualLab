@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Power, GraduationCap } from 'lucide-react';
-import { clearProfile } from '../../lib/progress.js';
+import { clearProfile } from '../../lib/identity.js';
 
 function Chip({ label, value, color }) {
   return (

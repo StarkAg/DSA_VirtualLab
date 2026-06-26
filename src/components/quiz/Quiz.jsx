@@ -1,11 +1,20 @@
 import { useState } from 'react';
+import { useMutation, useQuery } from 'convex/react';
 import { CheckCircle2, XCircle, RotateCcw, Trophy } from 'lucide-react';
-import { setQuizBest, getExperimentProgress } from '../../lib/progress.js';
+import { api } from '@convex/api';
+import { getProfile } from '../../lib/identity.js';
 
 export default function Quiz({ exp }) {
+  const profile = getProfile();
+  const setQuizBest = useMutation(api.progress.setQuizBest);
+  const progress = useQuery(
+    api.progress.forUser,
+    profile?.userId ? { userId: profile.userId } : 'skip'
+  );
+  const best = progress?.quizzes?.find((q) => q.experimentId === exp.id)?.best || 0;
+
   const [answers, setAnswers] = useState({}); // qIdx -> optionIdx
   const [submitted, setSubmitted] = useState(false);
-  const best = getExperimentProgress(exp.id).quizBest || 0;
 
   const total = exp.quiz.length;
   const score = exp.quiz.reduce((acc, q, i) => acc + (answers[i] === q.answer ? 1 : 0), 0);
@@ -13,7 +22,9 @@ export default function Quiz({ exp }) {
 
   const submit = () => {
     setSubmitted(true);
-    setQuizBest(exp.id, Math.round((score / total) * 100));
+    if (profile?.userId) {
+      setQuizBest({ userId: profile.userId, experimentId: exp.id, best: pct }).catch(() => {});
+    }
   };
   const retry = () => { setAnswers({}); setSubmitted(false); };
 

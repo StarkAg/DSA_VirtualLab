@@ -1,25 +1,42 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { GraduationCap, ArrowRight } from 'lucide-react';
-import { setProfile } from '../lib/progress.js';
+import { useNavigate, Link } from 'react-router-dom';
+import { useMutation } from 'convex/react';
+import { GraduationCap, ArrowRight, ShieldCheck } from 'lucide-react';
+import { api } from '@convex/api';
+import { setProfile } from '../lib/identity.js';
 
-// Mock SRM-style login. No real auth — derives a student profile from the email.
+// Student login. No password — upserts a Convex user record from the email.
 export default function Login() {
   const navigate = useNavigate();
+  const ensureUser = useMutation(api.users.ensureUser);
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
+  const [busy, setBusy] = useState(false);
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
+    if (busy) return;
+    setBusy(true);
     const handle = (email.split('@')[0] || 'student').toLowerCase();
     const id = String(Math.abs([...handle].reduce((a, c) => a * 31 + c.charCodeAt(0), 7)) % 1000000000).padStart(9, '4');
-    setProfile({
+    const profile = {
       name: (name || handle).replace(/[^a-zA-Z ]/g, '').trim() || 'Student',
       email: email || `${handle}@srmist.edu.in`,
       id,
       dept: 'School of Computing',
-    });
-    navigate('/dashboard');
+    };
+    try {
+      const { userId, role } = await ensureUser({
+        name: profile.name,
+        email: profile.email,
+        studentId: profile.id,
+        dept: profile.dept,
+      });
+      setProfile({ ...profile, userId, role });
+      navigate('/dashboard');
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -80,12 +97,15 @@ export default function Login() {
             className="mt-1 w-full rounded-lg border border-surface-line bg-white px-3 py-2.5 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20"
           />
 
-          <button type="submit" className="btn-primary mt-6 w-full">
-            Continue <ArrowRight size={16} />
+          <button type="submit" disabled={busy} className="btn-primary mt-6 w-full disabled:opacity-60">
+            {busy ? 'Signing in…' : 'Continue'} <ArrowRight size={16} />
           </button>
           <p className="mt-4 text-center text-[11px] text-ink-faint">
-            Demo login — no password required. Your progress is saved on this device.
+            Demo login — no password required. Your progress syncs to your account.
           </p>
+          <Link to="/admin" className="mt-3 flex items-center justify-center gap-1.5 text-[11px] font-medium text-ink-mute hover:text-accent">
+            <ShieldCheck size={12} /> Admin login
+          </Link>
         </form>
       </div>
     </div>

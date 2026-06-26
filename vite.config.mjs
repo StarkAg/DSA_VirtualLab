@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { fileURLToPath } from 'node:url';
 
 // Dev-only middleware so /api/execute works under `npm run dev` (Vite doesn't
 // run Vercel functions). Mirrors api/execute.js using the same core.
@@ -30,6 +31,11 @@ function apiDevPlugin() {
 
 export default defineConfig({
   plugins: [react(), apiDevPlugin()],
+  resolve: {
+    alias: {
+      '@convex': fileURLToPath(new URL('./convex/_generated', import.meta.url)),
+    },
+  },
   server: { port: 5174, open: false },
   build: {
     chunkSizeWarningLimit: 900,

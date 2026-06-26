@@ -1,15 +1,20 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useMutation } from 'convex/react';
 import { Save, RotateCcw, Play, CornerDownLeft, Check } from 'lucide-react';
+import { api } from '@convex/api';
 import CodeEditor from '../editor/CodeEditor.jsx';
 import ResultPanel from './ResultPanel.jsx';
 import { LANGUAGES } from '../../data/experiments.js';
 import { evaluate, checkKeywords, isMockMode } from '../../lib/judge0.js';
-import { markChallengeSolved } from '../../lib/progress.js';
+import { getProfile } from '../../lib/identity.js';
 
 const codeKey = (exp, ch, lang) => `dsalab.code.${exp}.${ch}.${lang}`;
 
 export default function PracticePanel({ experimentId, challenge }) {
   const langs = LANGUAGES;
+  const profile = getProfile();
+  const recordSolve = useMutation(api.progress.recordSolve);
+  const logSubmission = useMutation(api.progress.logSubmission);
   const [lang, setLang] = useState('c');
   const [code, setCode] = useState('');
   const [result, setResult] = useState(null);
@@ -44,8 +49,27 @@ export default function PracticePanel({ experimentId, challenge }) {
     const res = await evaluate({ source: code, langKey: lang, tests });
     setResult(res);
     setRunning(false);
-    if (allTests && res.mode === 'judge0' && res.passedCount === res.total) {
-      markChallengeSolved(experimentId, challenge.id);
+
+    // Persist to Convex on a full Evaluate run (only when really executed).
+    if (allTests && res.mode === 'live' && profile?.userId) {
+      const allPassed = res.passedCount === res.total;
+      logSubmission({
+        userId: profile.userId,
+        experimentId,
+        challengeId: challenge.id,
+        language: lang,
+        passed: allPassed,
+        passedCount: res.passedCount,
+        total: res.total,
+      }).catch(() => {});
+      if (allPassed) {
+        recordSolve({
+          userId: profile.userId,
+          experimentId,
+          challengeId: challenge.id,
+          language: lang,
+        }).catch(() => {});
+      }
     }
   };
 

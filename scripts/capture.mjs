@@ -1,20 +1,17 @@
-// Captures README screenshots from the LIVE site (where /api/execute works).
-// Usage: node scripts/capture.mjs
+// Captures README screenshots from the LIVE site (where /api/execute + Convex work).
+// Usage: ADMIN_PASSCODE=... node scripts/capture.mjs
 import { chromium } from 'playwright';
 import { mkdirSync } from 'fs';
 
 const BASE = process.env.CAPTURE_URL || 'https://dsa-virtual-lab.vercel.app';
+const ADMIN_PASSCODE = process.env.ADMIN_PASSCODE || '';
 const OUT = 'docs/screenshots';
 mkdirSync(OUT, { recursive: true });
 
-const profile = { name: 'Dhruv', email: 'dhruv@srmist.edu.in', id: '295967720', dept: 'School of Computing' };
-const progress = {
-  stack: { solved: { balanced: true, reverse: true }, quizBest: 100 },
-  queue: { solved: { fifo: true }, quizBest: 75 },
-  linkedlist: { solved: { 'build-print': true }, quizBest: 50 },
-  sorting: { solved: { ascending: true }, quizBest: 75 },
-  searching: { solved: {}, quizBest: 25 },
-};
+// A seeded demo student (see convex/seed.ts) so the dashboard shows progress.
+const DEMO_EMAIL = 'aarav@srmist.edu.in';
+const DEMO_NAME = 'Aarav Sharma';
+
 const stackReverseC = `#include <stdio.h>
 int main(){
     int n; scanf("%d",&n);
@@ -24,34 +21,32 @@ int main(){
     return 0;
 }`;
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
 const run = async () => {
   const browser = await chromium.launch();
   const ctx = await browser.newContext({ viewport: { width: 1366, height: 900 }, deviceScaleFactor: 2 });
   const page = await ctx.newPage();
 
-  // seed localStorage on the origin
+  // log in as the seeded demo student
   await page.goto(`${BASE}/login`);
-  await page.evaluate(([p, pr, code]) => {
-    localStorage.setItem('dsalab.profile', p);
-    localStorage.setItem('dsalab.progress', pr);
-    localStorage.setItem('dsalab.code.stack.reverse.c', code);
-  }, [JSON.stringify(profile), JSON.stringify(progress), stackReverseC]);
-
-  // 1) Dashboard
-  await page.goto(`${BASE}/dashboard`);
-  await page.waitForTimeout(1200);
+  await page.waitForTimeout(800);
+  await page.locator('input').first().fill(DEMO_NAME);
+  await page.locator('input[type=email]').fill(DEMO_EMAIL);
+  await page.getByRole('button', { name: /Continue|Signing/ }).click();
+  await page.waitForURL('**/dashboard', { timeout: 20000 }).catch(() => {});
+  await page.waitForTimeout(2000);
   await page.screenshot({ path: `${OUT}/dashboard.png` });
   console.log('captured dashboard');
 
-  // 2) Experiment — theory + live visualizer (sorting)
+  // pre-seed editor code for the practice shot
+  await page.evaluate((code) => localStorage.setItem('dsalab.code.stack.reverse.c', code), stackReverseC);
+
+  // Experiment — theory + live visualizer (sorting)
   await page.goto(`${BASE}/experiment/sorting`);
   await page.waitForTimeout(1500);
   await page.screenshot({ path: `${OUT}/experiment-theory.png` });
   console.log('captured experiment-theory');
 
-  // 3) Practice — code editor + passing evaluation (Stack › Reverse)
+  // Practice — code editor + passing evaluation (Stack › Reverse)
   await page.goto(`${BASE}/experiment/stack`);
   await page.waitForTimeout(800);
   await page.getByRole('button', { name: 'Practice' }).click();
@@ -59,19 +54,31 @@ const run = async () => {
   await page.getByRole('button', { name: /Reverse/ }).click();
   await page.waitForTimeout(400);
   await page.getByRole('button', { name: 'Evaluate' }).click();
-  // wait for the real Wandbox grading to finish
   await page.waitForFunction(() => /test cases passed/.test(document.body.textContent), { timeout: 60000 });
   await page.waitForTimeout(600);
   await page.screenshot({ path: `${OUT}/practice.png`, fullPage: true });
   console.log('captured practice');
 
-  // 4) Quiz
+  // Quiz
   await page.goto(`${BASE}/experiment/queue`);
   await page.waitForTimeout(700);
   await page.getByRole('button', { name: 'Quiz' }).click();
   await page.waitForTimeout(700);
   await page.screenshot({ path: `${OUT}/quiz.png` });
   console.log('captured quiz');
+
+  // Admin panel (needs ADMIN_PASSCODE in env)
+  if (ADMIN_PASSCODE) {
+    await page.goto(`${BASE}/admin`);
+    await page.waitForTimeout(800);
+    await page.locator('input[type=password]').fill(ADMIN_PASSCODE);
+    await page.getByRole('button', { name: 'Enter' }).click();
+    await page.waitForTimeout(2500);
+    await page.screenshot({ path: `${OUT}/admin.png` });
+    console.log('captured admin');
+  } else {
+    console.log('skipped admin (set ADMIN_PASSCODE to capture it)');
+  }
 
   await browser.close();
 };

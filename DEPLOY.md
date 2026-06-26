@@ -1,15 +1,31 @@
 # Deployment
 
-## Frontend → Vercel (already live)
+Live: **https://dsa-virtual-lab.vercel.app** · Admin: **/admin**
 
-Live: **https://dsa-virtual-lab.vercel.app**
+Two pieces: the **frontend + execution proxy** on Vercel, and the **Convex backend**.
 
-Redeploy after changes:
+## Backend → Convex
+
 ```bash
+npx convex dev          # first run: creates the project + dev deployment, writes .env.local
+npx convex deploy -y    # push functions to the PRODUCTION deployment, prints its URL
+npx convex env set ADMIN_PASSCODE "your-passcode"          # dev
+npx convex env set ADMIN_PASSCODE "your-passcode" --prod   # production
+```
+Seed demo students (optional): `npx convex run seed:demo --prod`.
+
+Tables: `users`, `solves`, `quizScores`, `submissions`. The admin passcode lives in the
+Convex env var `ADMIN_PASSCODE` (default `dsalab-admin` if unset).
+
+## Frontend → Vercel
+
+Set the production Convex URL so the build can reach the backend:
+```bash
+vercel env add VITE_CONVEX_URL production    # paste the prod URL from `convex deploy`
 vercel deploy --prod --yes --name dsa-virtual-lab
 ```
-The SPA and the `/api/execute` serverless proxy deploy together. No env vars are
-required — execution defaults to the free **Wandbox** engine.
+The SPA, the `/api/execute` proxy and `convex/_generated` deploy together. Execution
+defaults to the free **Wandbox** engine (no key). `VITE_EXEC_MODE=mock` disables it.
 
 ---
 
