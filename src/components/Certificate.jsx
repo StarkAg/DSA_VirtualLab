@@ -115,6 +115,8 @@ function Seal({ animated, idSuffix = 'm' }) {
 function buildPrintHTML(name, expTitle, date) {
   const shield = `<svg width="84" height="84" viewBox="0 0 100 100" fill="none"><defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#A78BFA"/><stop offset="55%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#4C1D95"/></linearGradient></defs><path d="M50 12 L80 24 V52 C80 70 66 82 50 88 C34 82 20 70 20 52 V24 Z" fill="url(#sg)" stroke="#C4B5FD" stroke-width="1" stroke-opacity="0.5"/><path d="M50 18 L74 28 V52 C74 66 63 76 50 81 C37 76 26 66 26 52 V28 Z" fill="none" stroke="#E9D5FF" stroke-width="0.7" stroke-opacity="0.35"/><g transform="translate(50,50)" fill="#F5F3FF"><path d="M0 -14 L18 -6 L0 2 L-18 -6 Z"/><path d="M-12 -2 V8 C-12 13 12 13 12 8 V-2 L0 4 Z" opacity="0.95"/></g></svg>`;
   const seal = `<svg width="118" height="118" viewBox="0 0 120 120" fill="none"><defs><path id="sr" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/><radialGradient id="sc" cx="42%" cy="38%" r="65%"><stop offset="0%" stop-color="#3B2A6B"/><stop offset="100%" stop-color="#1A1340"/></radialGradient></defs><circle cx="60" cy="60" r="56" fill="none" stroke="#8B5CF6" stroke-width="1" stroke-opacity="0.5"/><circle cx="60" cy="60" r="50" fill="none" stroke="#8B5CF6" stroke-width="0.5" stroke-opacity="0.3" stroke-dasharray="2 3"/><text font-family="Space Grotesk,sans-serif" font-size="7.5" font-weight="600" letter-spacing="2.6" fill="#C4B5FD"><textPath href="#sr" startOffset="0%">DSA · VIRTUAL · LABORATORY · SRMIST · </textPath></text><circle cx="60" cy="60" r="36" fill="url(#sc)" stroke="#7C3AED" stroke-width="1" stroke-opacity="0.6"/><circle cx="60" cy="60" r="30" fill="none" stroke="#A78BFA" stroke-width="0.5" stroke-opacity="0.4"/><g transform="translate(60,58)" fill="#E9D5FF"><path d="M0 -12 L15 -5 L0 2 L-15 -5 Z"/><path d="M-10 -2 V7 C-10 11 10 11 10 7 V-2 L0 3 Z" opacity="0.9"/></g><text x="60" y="84" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-size="6" fill="#A78BFA" letter-spacing="1.5">CERTIFIED</text></svg>`;
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const arc = `<img class="arc" src="${origin}/arc-reactor.png" alt="">`;
   return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <title>${name} — ${expTitle} Certificate</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
@@ -137,6 +139,7 @@ body{display:flex;align-items:center;justify-content:center;width:297mm;height:2
 .body{font-size:9.5px;line-height:1.7;color:#7C8BB0;max-width:430px;margin-top:18px;}
 .shield{position:absolute;top:42px;right:54px;}
 .seal{position:absolute;top:150px;right:64px;}
+.arc{position:absolute;left:-17%;bottom:-24%;width:56%;opacity:.11;mix-blend-mode:screen;z-index:0;}
 .bot{position:absolute;left:54px;right:54px;bottom:42px;display:flex;align-items:flex-end;justify-content:space-between;}
 .sig{}.sigmark{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22px;color:#E9D5FF;}
 .sline{width:150px;height:1px;background:#5B6488;margin:4px 0 6px;}
@@ -167,9 +170,14 @@ body{display:flex;align-items:center;justify-content:center;width:297mm;height:2
 
 const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
+// "harsh AGARWAL" → "Harsh Agarwal"
+function toProperCase(s) {
+  return String(s).toLowerCase().replace(/\b[a-z]/g, (c) => c.toUpperCase());
+}
+
 export default function Certificate({ exp, onClose }) {
   const profile = getProfile() || {};
-  const name = profile.name || 'Student';
+  const name = toProperCase(profile.name || 'Student');
   const date = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
   const confetti = useConfetti(reduceMotion ? 0 : 54);
 
@@ -200,7 +208,6 @@ export default function Certificate({ exp, onClose }) {
         @keyframes overlayIn { from { opacity:0; } to { opacity:1; } }
         @keyframes sealSpin { from { transform:rotate(0deg);} to { transform:rotate(360deg);} }
         @keyframes glowPulse { 0%,100% { opacity:.5; transform:scale(1);} 50% { opacity:.9; transform:scale(1.08);} }
-        @keyframes foilSweep { 0% { transform: translateX(-130%) skewX(-18deg);} 60%,100% { transform: translateX(260%) skewX(-18deg);} }
       `}</style>
 
       <div style={{ position:'fixed', inset:0, zIndex:50, display:'flex', alignItems:'center', justifyContent:'center', padding:16, background:'rgba(6,4,18,0.82)', backdropFilter:'blur(8px)', animation:'overlayIn .3s ease' }}>
@@ -239,6 +246,9 @@ export default function Certificate({ exp, onClose }) {
             }}>
               {/* corner glow */}
               <div style={{ position:'absolute', width:360, height:360, borderRadius:'50%', top:-130, right:-90, background:'radial-gradient(circle, rgba(139,92,246,0.4), transparent 70%)', pointerEvents:'none' }} />
+              {/* large GradeX arc-reactor in the bottom-left corner, ~40% visible (bleeds off-edge).
+                  white-on-black PNG → screen blend drops the black background */}
+              <img src="/arc-reactor.png" alt="" style={{ position:'absolute', left:'-17%', bottom:'-24%', width:'56%', opacity:0.11, mixBlendMode:'screen', zIndex:0, pointerEvents:'none' }} />
 
               {/* Shield badge top-right */}
               <div style={{ position:'absolute', top:30, right:38, zIndex:2 }}><ShieldBadge /></div>
@@ -252,13 +262,7 @@ export default function Certificate({ exp, onClose }) {
                 <div style={{ width:56, height:3, borderRadius:2, background:'linear-gradient(90deg,#A855F7,#6366F1)', marginTop:9 }} />
 
                 <p style={{ fontSize:11, color:'#94A3B8', marginTop:20 }}>This acknowledges that</p>
-                {/* name with foil shimmer */}
-                <div style={{ position:'relative', display:'inline-block', overflow:'hidden', marginTop:3 }}>
-                  <p style={{ fontFamily:"'Cormorant Garamond', Georgia, serif", fontSize:46, fontWeight:600, color:'#fff', lineHeight:1 }}>{name}</p>
-                  {!reduceMotion && (
-                    <span style={{ position:'absolute', top:0, left:0, width:'45%', height:'100%', background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.6),transparent)', animation:'foilSweep 2.8s ease-in-out 0.7s infinite', pointerEvents:'none' }} />
-                  )}
-                </div>
+                <p style={{ fontFamily:"'Cormorant Garamond', Georgia, serif", fontSize:46, fontWeight:600, color:'#fff', lineHeight:1, marginTop:3 }}>{name}</p>
 
                 <p style={{ fontSize:11, color:'#94A3B8', marginTop:16 }}>has successfully completed the</p>
                 <p style={{ fontSize:17, fontWeight:600, color:'#C4B5FD', marginTop:4 }}>{exp.title} — Experiment</p>
@@ -291,9 +295,6 @@ export default function Certificate({ exp, onClose }) {
             </div>
           </div>
 
-          <p style={{ textAlign:'center', fontSize:11, color:'rgba(255,255,255,0.4)', marginTop:10, fontFamily:"'Space Grotesk', Inter, sans-serif" }}>
-            Opens a print dialog — choose "Save as PDF" to download
-          </p>
         </div>
       </div>
     </>
