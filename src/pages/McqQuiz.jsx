@@ -225,15 +225,15 @@ function Shell({ children }) {
   return (
     <div className="flex min-h-screen flex-col bg-surface-sunken">
       {/* header tab */}
-      <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-surface-line bg-surface/90 px-4 py-2.5 backdrop-blur">
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand text-white"><GraduationCap size={19} /></span>
+      <header className="sticky top-0 z-40 flex items-center gap-3 px-4 py-2.5 text-white shadow-md" style={{ background: '#0A66C2' }}>
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-white/20 text-white"><GraduationCap size={19} /></span>
         <div className="min-w-0 leading-tight">
-          <p className="font-display text-base font-bold text-ink">APP Quiz</p>
-          <p className="truncate text-[11px] text-ink-mute">Advanced Programming Practice · 21CSC203P</p>
+          <p className="font-display text-base font-bold text-white">APP Quiz</p>
+          <p className="truncate text-[11px] text-white/75">Advanced Programming Practice · 21CSC203P</p>
         </div>
-        <div className="ml-auto hidden text-right sm:block">
-          <p className="stat-label">Faculty Mentor</p>
-          <p className="text-sm font-semibold text-ink">Dr. Arun V</p>
+        <div className="ml-auto text-right">
+          <p className="text-[10px] uppercase tracking-wide text-white/70">Faculty Mentor</p>
+          <p className="text-sm font-semibold text-white">Dr. Arun V</p>
         </div>
       </header>
 

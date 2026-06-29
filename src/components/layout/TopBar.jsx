@@ -3,10 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { Power, GraduationCap } from 'lucide-react';
 import { clearProfile } from '../../lib/identity.js';
 
-function Chip({ label, value, color }) {
+// LinkedIn brand blue
+const LINKEDIN = '#0A66C2';
+
+function Chip({ label, value }) {
   return (
-    <span className="chip" style={{ borderColor: `${color}55`, background: `${color}11`, color }}>
-      <span className="opacity-70">{label}:</span>
+    <span className="chip border-white/25 bg-white/15 text-white">
+      <span className="opacity-75">{label}:</span>
       <span className="font-semibold">{value}</span>
     </span>
   );
@@ -43,33 +46,41 @@ export default function TopBar({ profile }) {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-surface-line bg-surface/90 px-4 py-2.5 backdrop-blur">
-      <button onClick={() => navigate('/dashboard')} className="flex items-center gap-2 pr-2">
-        <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand text-white">
+    <header
+      className="sticky top-0 z-40 flex items-center gap-2 px-3 py-2.5 text-white shadow-md sm:gap-3 sm:px-4"
+      style={{ background: LINKEDIN }}
+    >
+      <button onClick={() => navigate('/dashboard')} className="flex shrink-0 items-center gap-2 pr-1 sm:pr-2">
+        <span className="grid h-8 w-8 place-items-center rounded-lg bg-white/20 text-white">
           <GraduationCap size={18} />
         </span>
-        <span className="font-display text-lg font-bold tracking-tight">
-          DSA<span className="text-accent">Lab</span>
+        <span className="font-display text-lg font-bold tracking-tight text-white">
+          DSA<span className="text-white/70">Lab</span>
         </span>
       </button>
 
       <div className="hidden flex-wrap items-center gap-2 lg:flex">
-        <Chip label="Role" value="Student" color="#16a34a" />
-        <Chip label="Name" value={profile?.name || 'Student'} color="#2563eb" />
-        <Chip label="Id" value={profile?.id || '—'} color="#0d9488" />
-        <Chip label="Dept" value={profile?.dept || 'CSE'} color="#d97706" />
+        <Chip label="Role" value="Student" />
+        <Chip label="Name" value={profile?.name || 'Student'} />
+        <Chip label="Id" value={profile?.id || '—'} />
+        <Chip label="Dept" value={profile?.dept || 'CSE'} />
       </div>
 
-      <span className="ml-auto hidden items-center gap-1.5 text-xs text-ink-mute md:flex">
-        <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+      {/* mobile: compact name */}
+      <span className="ml-1 truncate text-sm font-semibold text-white lg:hidden">
+        {profile?.name || 'Student'}
+      </span>
+
+      <span className="ml-auto hidden items-center gap-1.5 text-xs text-white/80 md:flex">
+        <span className="h-1.5 w-1.5 rounded-full bg-white/80" />
         {dateStr}
       </span>
 
       <button
         onClick={logout}
-        className="ml-auto flex items-center gap-2 rounded-lg bg-bad px-3 py-1.5 text-xs font-semibold text-white transition hover:brightness-110 md:ml-3"
+        className="ml-auto flex shrink-0 items-center gap-2 rounded-lg bg-white/15 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-white/25 md:ml-3"
       >
-        <Power size={14} /> LOGOUT
+        <Power size={14} /> <span className="hidden sm:inline">LOGOUT</span>
       </button>
     </header>
   );

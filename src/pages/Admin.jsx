@@ -82,11 +82,11 @@ function AdminDashboard({ passcode, onLogout }) {
 
   return (
     <div className="min-h-screen">
-      <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-surface-line bg-surface/90 px-4 py-2.5 backdrop-blur">
-        <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand text-white"><GraduationCap size={18} /></span>
-        <span className="font-display text-lg font-bold">DSA<span className="text-accent">Lab</span></span>
-        <span className="chip border-accent/30 bg-accent/10 text-accent">Admin</span>
-        <button onClick={onLogout} className="ml-auto flex items-center gap-2 rounded-lg bg-bad px-3 py-1.5 text-xs font-semibold text-white hover:brightness-110">
+      <header className="sticky top-0 z-40 flex items-center gap-3 px-4 py-2.5 text-white shadow-md" style={{ background: '#0A66C2' }}>
+        <span className="grid h-8 w-8 place-items-center rounded-lg bg-white/20 text-white"><GraduationCap size={18} /></span>
+        <span className="font-display text-lg font-bold text-white">DSA<span className="text-white/70">Lab</span></span>
+        <span className="chip border-white/30 bg-white/15 text-white">Admin</span>
+        <button onClick={onLogout} className="ml-auto flex items-center gap-2 rounded-lg bg-white/15 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/25">
           <LogOut size={14} /> Sign out
         </button>
       </header>
