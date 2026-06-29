@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery, useMutation } from 'convex/react';
 import { GraduationCap, ArrowRight, ArrowLeft, CheckCircle2, XCircle, ListChecks, RotateCcw, Home } from 'lucide-react';
@@ -216,5 +216,28 @@ export default function McqQuiz() {
 }
 
 function Shell({ children }) {
-  return <div className="flex min-h-screen items-center justify-center bg-surface-sunken p-6">{children}</div>;
+  useEffect(() => {
+    const prev = document.title;
+    document.title = 'APP Quiz · Dr. Arun V';
+    return () => { document.title = prev; };
+  }, []);
+
+  return (
+    <div className="flex min-h-screen flex-col bg-surface-sunken">
+      {/* header tab */}
+      <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-surface-line bg-surface/90 px-4 py-2.5 backdrop-blur">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand text-white"><GraduationCap size={19} /></span>
+        <div className="min-w-0 leading-tight">
+          <p className="font-display text-base font-bold text-ink">APP Quiz</p>
+          <p className="truncate text-[11px] text-ink-mute">Advanced Programming Practice · 21CSC203P</p>
+        </div>
+        <div className="ml-auto hidden text-right sm:block">
+          <p className="stat-label">Faculty Mentor</p>
+          <p className="text-sm font-semibold text-ink">Dr. Arun V</p>
+        </div>
+      </header>
+
+      <div className="flex flex-1 items-center justify-center p-6">{children}</div>
+    </div>
+  );
 }
