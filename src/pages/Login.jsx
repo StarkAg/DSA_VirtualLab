@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useMutation } from 'convex/react';
-import { GraduationCap, ArrowRight, ShieldCheck } from 'lucide-react';
+import { GraduationCap, ArrowRight, ShieldCheck, ListChecks } from 'lucide-react';
 import { api } from '@convex/api';
 import { setProfile } from '../lib/identity.js';
 
@@ -103,9 +103,14 @@ export default function Login() {
           <p className="mt-4 text-center text-[11px] text-ink-faint">
             Demo login — no password required. Your progress syncs to your account.
           </p>
-          <Link to="/admin" className="mt-3 flex items-center justify-center gap-1.5 text-[11px] font-medium text-ink-mute hover:text-accent">
-            <ShieldCheck size={12} /> Admin login
-          </Link>
+          <div className="mt-3 flex items-center justify-center gap-4">
+            <Link to="/quiz" className="flex items-center gap-1.5 text-[11px] font-medium text-ink-mute hover:text-accent">
+              <ListChecks size={12} /> Take the MCQ Quiz
+            </Link>
+            <Link to="/admin" className="flex items-center gap-1.5 text-[11px] font-medium text-ink-mute hover:text-accent">
+              <ShieldCheck size={12} /> Admin login
+            </Link>
+          </div>
         </form>
       </div>
     </div>

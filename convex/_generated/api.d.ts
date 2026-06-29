@@ -9,6 +9,7 @@
  */
 
 import type * as admin from "../admin.js";
+import type * as mcq from "../mcq.js";
 import type * as progress from "../progress.js";
 import type * as seed from "../seed.js";
 import type * as users from "../users.js";
@@ -21,6 +22,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   admin: typeof admin;
+  mcq: typeof mcq;
   progress: typeof progress;
   seed: typeof seed;
   users: typeof users;

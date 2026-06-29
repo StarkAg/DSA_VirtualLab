@@ -52,4 +52,23 @@ export default defineSchema({
     total: v.number(),
     createdAt: v.number(),
   }).index("by_user", ["userId"]),
+
+  // Standalone MCQ quiz (admin-managed question bank, served at /quiz).
+  mcqQuestions: defineTable({
+    question: v.string(),
+    options: v.array(v.string()),
+    answer: v.number(), // index into options of the correct choice
+    order: v.number(),
+    createdAt: v.number(),
+  }).index("by_order", ["order"]),
+
+  // One row per submitted quiz attempt.
+  mcqAttempts: defineTable({
+    userId: v.id("users"),
+    name: v.string(),
+    email: v.string(),
+    score: v.number(),
+    total: v.number(),
+    submittedAt: v.number(),
+  }).index("by_user", ["userId"]),
 });

@@ -1,4 +1,5 @@
-import { IdCard, User, CheckCircle2, GraduationCap } from 'lucide-react';
+import { IdCard, User, CheckCircle2, GraduationCap, ListChecks } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useQuery } from 'convex/react';
 import { api } from '@convex/api';
 import SectionHeader from '../components/layout/SectionHeader.jsx';
@@ -28,9 +29,9 @@ export default function Dashboard() {
           <p className="font-display text-base font-bold leading-tight text-ink sm:text-lg">Dr. V. Arun &nbsp;·&nbsp; Dr. U. V. Anbazhagu</p>
           <p className="text-xs text-ink-mute">Department of Computing Technologies</p>
         </div>
-        <span className="ml-auto hidden text-right text-[11px] font-medium uppercase tracking-wide text-ink-faint sm:block">
-          DSA Virtual Lab
-        </span>
+        <Link to="/quiz" className="btn-primary ml-auto shrink-0 !px-3 !py-2 text-xs sm:text-sm">
+          <ListChecks size={15} /> MCQ Quiz
+        </Link>
       </div>
 
       {/* top stat cards */}
