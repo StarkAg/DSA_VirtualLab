@@ -162,7 +162,10 @@ body{display:flex;align-items:center;justify-content:center;width:297mm;height:2
   <div class="shield">${shield}</div>
   <div class="seal">${seal}</div>
   <div class="bot">
-    <div class="sig"><div class="sigmark">Dr. V. Arun</div><div class="sline"></div><div class="sn">Dr. V. Arun</div><div class="sr">Faculty Mentor · Dept. of Computing Technologies</div></div>
+    <div style="display:flex;gap:40px">
+      <div class="sig"><div class="sigmark">Dr. V. Arun</div><div class="sline"></div><div class="sn">Dr. V. Arun</div><div class="sr">Faculty Mentor · Computing Technologies</div></div>
+      <div class="sig"><div class="sigmark">Dr. U. V. Anbazhagu</div><div class="sline"></div><div class="sn">Dr. U. V. Anbazhagu</div><div class="sr">Faculty Mentor · Computing Technologies</div></div>
+    </div>
     <div class="brand"><div class="brandico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div><div class="brandtx"><b>DSA LAB</b><span>VIRTUAL LABORATORY</span></div></div>
   </div>
 </div></div></body></html>`;
@@ -274,13 +277,21 @@ export default function Certificate({ exp, onClose }) {
                 </p>
               </div>
 
-              {/* Bottom: signature + brand */}
+              {/* Bottom: two faculty signatures + brand */}
               <div style={{ position:'absolute', left:40, right:40, bottom:30, display:'flex', alignItems:'flex-end', justifyContent:'space-between', zIndex:2 }}>
-                <div>
-                  <p style={{ fontFamily:"'Cormorant Garamond', serif", fontStyle:'italic', fontSize:20, color:'#E9D5FF' }}>Dr. V. Arun</p>
-                  <div style={{ width:148, height:1, background:'#5B6488', margin:'4px 0 6px' }} />
-                  <p style={{ fontSize:12, fontWeight:600, color:'#F1F5F9' }}>Dr. V. Arun</p>
-                  <p style={{ fontSize:8, color:'#94A3B8', letterSpacing:0.5, textTransform:'uppercase' }}>Faculty Mentor · Dept. of Computing Technologies</p>
+                <div style={{ display:'flex', gap:34 }}>
+                  <div>
+                    <p style={{ fontFamily:"'Cormorant Garamond', serif", fontStyle:'italic', fontSize:19, color:'#E9D5FF' }}>Dr. V. Arun</p>
+                    <div style={{ width:128, height:1, background:'#5B6488', margin:'4px 0 6px' }} />
+                    <p style={{ fontSize:11.5, fontWeight:600, color:'#F1F5F9' }}>Dr. V. Arun</p>
+                    <p style={{ fontSize:7.5, color:'#94A3B8', letterSpacing:0.5, textTransform:'uppercase' }}>Faculty Mentor · Computing Technologies</p>
+                  </div>
+                  <div>
+                    <p style={{ fontFamily:"'Cormorant Garamond', serif", fontStyle:'italic', fontSize:19, color:'#E9D5FF' }}>Dr. U. V. Anbazhagu</p>
+                    <div style={{ width:128, height:1, background:'#5B6488', margin:'4px 0 6px' }} />
+                    <p style={{ fontSize:11.5, fontWeight:600, color:'#F1F5F9' }}>Dr. U. V. Anbazhagu</p>
+                    <p style={{ fontSize:7.5, color:'#94A3B8', letterSpacing:0.5, textTransform:'uppercase' }}>Faculty Mentor · Computing Technologies</p>
+                  </div>
                 </div>
                 <div style={{ display:'flex', alignItems:'center', gap:8 }}>
                   <span style={{ width:30, height:30, borderRadius:7, background:'linear-gradient(135deg,#7C3AED,#3B82F6)', display:'flex', alignItems:'center', justifyContent:'center' }}>

@@ -24,8 +24,8 @@ export default function Dashboard() {
           <GraduationCap size={22} />
         </span>
         <div className="min-w-0">
-          <p className="stat-label">Mentor</p>
-          <p className="font-display text-base font-bold leading-tight text-ink sm:text-lg">Dr. V. Arun</p>
+          <p className="stat-label">Faculty Mentors</p>
+          <p className="font-display text-base font-bold leading-tight text-ink sm:text-lg">Dr. V. Arun &nbsp;·&nbsp; Dr. U. V. Anbazhagu</p>
           <p className="text-xs text-ink-mute">Department of Computing Technologies</p>
         </div>
         <span className="ml-auto hidden text-right text-[11px] font-medium uppercase tracking-wide text-ink-faint sm:block">
