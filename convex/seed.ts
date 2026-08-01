@@ -30,6 +30,39 @@ const DEMO = [
   },
 ];
 
+const PURGE_EMAILS = [
+  "aarav@srmist.edu.in",
+  "diya@srmist.edu.in",
+  "rohan@srmist.edu.in",
+  "ananya@srmist.edu.in",
+  "kabir@srmist.edu.in",
+  "prodtest1782457157102@srmist.edu.in",
+];
+
+export const purgeDemo = mutation({
+  args: {},
+  handler: async (ctx) => {
+    let deleted = 0;
+    for (const email of PURGE_EMAILS) {
+      const user = await ctx.db
+        .query("users")
+        .withIndex("by_email", (q) => q.eq("email", email))
+        .first();
+      if (!user) continue;
+      const uid = user._id;
+      for (const row of await ctx.db.query("solves").withIndex("by_user", (q) => q.eq("userId", uid)).collect())
+        await ctx.db.delete(row._id);
+      for (const row of await ctx.db.query("quizScores").withIndex("by_user", (q) => q.eq("userId", uid)).collect())
+        await ctx.db.delete(row._id);
+      for (const row of await ctx.db.query("submissions").withIndex("by_user", (q) => q.eq("userId", uid)).collect())
+        await ctx.db.delete(row._id);
+      await ctx.db.delete(uid);
+      deleted++;
+    }
+    return { deleted };
+  },
+});
+
 export const demo = mutation({
   args: {},
   handler: async (ctx) => {
