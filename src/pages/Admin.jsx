@@ -160,7 +160,7 @@ function AdminDashboard({ passcode, onLogout }) {
         </section>
         </>
         )}
-        <p className="pb-4 text-center text-xs text-ink-faint">DSA Virtual Lab · Admin analytics · Mentors: Dr. V. Arun & Dr. U. V. Anbazhagu</p>
+        <p className="pb-4 text-center text-xs text-ink-faint">DSA Virtual Lab · Admin analytics · Mentor: Dr. V. Arun</p>
       </main>
     </div>
   );

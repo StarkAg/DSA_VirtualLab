@@ -26,7 +26,7 @@ export default function Dashboard() {
         </span>
         <div className="min-w-0">
           <p className="stat-label">Faculty Mentors</p>
-          <p className="font-display text-base font-bold leading-tight text-ink sm:text-lg">Dr. V. Arun &nbsp;·&nbsp; Dr. U. V. Anbazhagu</p>
+          <p className="font-display text-base font-bold leading-tight text-ink sm:text-lg">Dr. V. Arun</p>
           <p className="text-xs text-ink-mute">Department of Computing Technologies</p>
         </div>
         <Link to="/quiz" className="btn-primary ml-auto shrink-0 !px-3 !py-2 text-xs sm:text-sm">
